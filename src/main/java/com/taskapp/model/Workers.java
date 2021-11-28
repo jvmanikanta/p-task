@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +41,7 @@ public class Workers {
 	@Enumerated(EnumType.STRING)
 	private Available availability;
 	@OneToOne
+	@JsonIgnore
 	@JoinColumn(name = "task_id")
 	Task task;
 	

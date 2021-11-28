@@ -34,7 +34,7 @@ public class TaskServiceImpl implements ITaskService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public static final String BASEURL = "http://localhost:8081/workers-service/workers/";
+	public static final String BASEURL = "http://localhost:8084/workers-service/workers/";
 
 	@Override
 	public ResponseEntity<Workers> getWorkersById(int workersId) {
@@ -80,13 +80,13 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	@Override
-	public ResponseEntity<String> assignWorkers(int workersId, int taskId) {
-		String url = BASEURL + "workersId/" + workersId;
+	public ResponseEntity<String> assignWorkers(int taskId, int workersId) {
+		String url = BASEURL + "assignworkers/taskId/" + taskId+"/workersId/"+workersId;
 		ResponseEntity<Workers> rworker = restTemplate.getForEntity(url, Workers.class);
 		Workers worker = rworker.getBody();
 		Task task = taskRepository.findById(taskId).get();
 		task.setResourcesList(new HashSet<>(Arrays.asList(worker)));
-		taskRepository.save(task);
+		//taskRepository.save(task);
 		return ResponseEntity.ok("assign workers to task");
 
 	}
@@ -183,6 +183,11 @@ public class TaskServiceImpl implements ITaskService {
 	public List<Task> findByTaskNameAndWorkersAvailability(String taskName, String availability) {
 
 		return taskRepository.findByTaskNameAndWorkersAvailability(taskName, availability);
+	}
+
+	@Override
+	public List<Task> getTaskByMaintenenceId(int maintenenceId) {
+		return taskRepository.findTaskByMaintenenceId(maintenenceId);
 	}
 
 }

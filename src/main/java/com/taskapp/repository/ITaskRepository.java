@@ -35,6 +35,9 @@ public interface ITaskRepository extends JpaRepository<Task, Integer> {
 	List<Task> findByTaskStartDate(LocalDate startDate);
 
 	List<Task> findByTaskStatus(Status status);
+	
+	@Query("from Task t inner join t.maintenence m where m.maintenenceId=?1")
+	List<Task> findTaskByMaintenenceId(int maintenenceId);
 
 	@Query("from Task t inner join t.resourcesList w where t.taskStartDate=?1 and  w.workersavailablefrom=?2")
 	List<Task> findByTaskStartDateWorkerssAvailablefrom(LocalDate startDate, LocalDate workersavailablefrom);
@@ -44,5 +47,7 @@ public interface ITaskRepository extends JpaRepository<Task, Integer> {
 
 	@Query("from Task t inner join t.resourcesList w where t.taskName=?1 and  w.availability=?2")
 	List<Task> findByTaskNameAndWorkersAvailability(String taskName, String availability);
+	
+
 
 }

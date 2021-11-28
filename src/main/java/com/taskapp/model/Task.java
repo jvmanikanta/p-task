@@ -63,7 +63,6 @@ public class Task {
 	
 	@ManyToOne
 	@JoinColumn(name = "maintenence_id")
-	@JsonIgnore
 	private Maintenence maintenence;
 	
 	@ManyToOne

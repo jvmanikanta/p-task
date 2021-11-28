@@ -43,6 +43,8 @@ public interface ITaskService {
 	List<Task> getByTaskStartDate(LocalDate startDate);
 
 	List<Task> getByTaskStatus(Status status);
+	
+	List<Task> getTaskByMaintenenceId(int maintenenceId);
 
 	List<Task> getByTaskNameAndworkersType(String taskName, String workersType);
 
@@ -50,7 +52,7 @@ public interface ITaskService {
 
 	ResponseEntity<String> removeWorkersToTask(int taskId);
 
-	ResponseEntity<String> assignWorkers(int workersId, int taskId);
+	ResponseEntity<String> assignWorkers(int taskId, int workerId);
 
 	public ResponseEntity<Workers> getWorkersById(int workerId);
 

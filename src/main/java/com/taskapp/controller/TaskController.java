@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,6 +30,7 @@ import com.taskapp.model.Workers;
 import com.taskapp.service.ITaskService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/task-service")
 public class TaskController {
 	@Autowired
@@ -38,8 +40,10 @@ public class TaskController {
 	public ResponseEntity<Task> getById(@PathVariable("taskId") int taskId) {
 		Task getTask = taskService.getById(taskId);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("desc", "get a task by id  api");
-		return ResponseEntity.status(HttpStatus.OK).headers(headers).body(getTask);
+		//headers.set("Access-Control-Allow-Origin", "*");
+		headers.set("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+		return ResponseEntity.ok().headers(headers).body(getTask);
+		//return ResponseEntity.status(HttpStatus.OK).headers(headers).body(getTask);
 
 	}
 
@@ -48,7 +52,7 @@ public class TaskController {
 		Task newTask = taskService.addTask(task);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("desc", "add a task  api");
-		return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(newTask);
+		return ResponseEntity.ok().headers(headers).body(newTask);
 
 	}
 
@@ -168,10 +172,11 @@ public class TaskController {
 
 	}
 
-	@GetMapping("/assign/workersId/{workersId}/taskId/{taskId}")
-	public ResponseEntity<String> assignWorkersToTask(@PathVariable("workersId") int workersId,
-			@PathVariable("taskId") int taskId) {
-		return taskService.assignWorkers(workersId, taskId);
+	@GetMapping("/assign/taskId/{taskId}/workersId/{workersId}")
+	public ResponseEntity<Void> assignWorkersToTask(@PathVariable("taskId") int taskId,
+			@PathVariable("workersId") int workersId) {
+		 taskService.assignWorkers(taskId, workersId);
+		 return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/remove/taskId/{taskId}")
@@ -179,11 +184,14 @@ public class TaskController {
 		return taskService.removeWorkersToTask( taskId);
 	}
 	
-	@GetMapping("/assignworkers/workersId/{workersId}/taskId/{taskId}")
-	public ResponseEntity<ResponseEntity<String>> assignWorkers(@PathVariable("workersId") int workersId,
-			@PathVariable("taskId") int taskId) {
-		return ResponseEntity.ok(taskService.assignWorkers(workersId, taskId));
-	}
+//	@GetMapping("/assignworkers/workersId/{workersId}/taskId/{taskId}")
+//	public ResponseEntity<ResponseEntity<String>> assignWorkers(@PathVariable("workersId") int workersId,
+//			@PathVariable("taskId") int taskId) {
+//		return ResponseEntity.ok(taskService.assignWorkers(workersId, taskId));
+//	}
 	
-
+	@GetMapping("/tasks/maintenenceId/{maintenenceId}")
+	public List<Task> getTasksByMaintenenceById(@PathVariable("maintenenceId")int maintenenceId){
+		return taskService.getTaskByMaintenenceId(maintenenceId);
+	}
 }
